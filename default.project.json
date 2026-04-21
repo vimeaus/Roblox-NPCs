@@ -8,7 +8,7 @@
         "$path": "NPC.luau"
       },
       "Pathing": {
-        "$path": "Pathing.luau"
+        "$path": "Pathing"
       }
     },
 
