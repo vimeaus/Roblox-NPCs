@@ -14,6 +14,10 @@ type NPCSettings = {
     Size:Vector3,
 }
 
+--# Variables
+local ActiveNPCs = {}
+local AllNPCs = {}
+
 --# Local Functions
 
 
@@ -22,20 +26,28 @@ type NPCSettings = {
 --+ Defining the methods and properties of a NPC
 local NPC = {}
 
+function NPC.Move(self,Destination:Vector3|Vector2)
+    if not Destination then
+       return
+    end
 
+
+
+end
 
 --+ Defining the methods and properties of the NPC Handler
 local NPCHandler = {}
 
-function NPCHandler.newNPC(Settings:NPCSettings?):Object
+function NPCHandler.newNPC(Humanoid:Humanoid,Settings:NPCSettings?):Object
     if not Settings then
         Settings = {}
     end
 
     local newNPC = {}
+    newNPC.State = "Idle"
+    newNPC.Destination = nil
     newNPC.PathfindingType = Settings["PathfindingType"]
     newNPC.Size = Settings.Size or Vector3.new(1,1,1)
-
     return setmetatable(newNPC,NPC)
 end
 
