@@ -51,7 +51,7 @@ function NPCHandler.newNPC(Humanoid:Humanoid,Settings:NPCSettings?):Object
     return setmetatable(newNPC,NPC)
 end
 
-
+ 
 
 
 
