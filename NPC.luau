@@ -30,7 +30,6 @@ export type NonPlayerCharacter = {
     Wait : (NonPlayerCharacter) -> boolean,
     Continue : (NonPlayerCharacter) -> boolean,
     Destroy : (NonPlayerCharacter) -> nil,
-
 }
 
 --# Variables
@@ -56,27 +55,27 @@ function NPC.Move(self,Destination:Vector3|Vector2)
 end
 
 --? Cancels the respective NPC's pathing, causing it to finish its current movement, but stopping on the next path 'node'. 
-function NPC.Cancel(self)
+function NPC.Cancel(self) : boolean --+ False if not currently pathing (nothing to cancel), true if successfully cancelled.
 end
 
 --? Cancels the respective NPC's pathing, ceasing any movement immediately. 
-function NPC.Stop(self)
+function NPC.Stop(self) : boolean --+ False if not currently pathing (nothing to stop), true if successfully cancelled.
 end
 
 --? Interrupts the respective NPC's pathing, ceasing any movement, but being able to continue using :Continue()
-function NPC.Pause(self)
+function NPC.Pause(self) : boolean --+ False if not currently pathing (nothing to pause), true if successfully paused.
 end
 
 --? Interrupts the respective NPC's pathing, causing it to finish its current movement, but pausing on the next path 'node'. 
-function NPC.Wait(self)
+function NPC.Wait(self,TimeLimit:number) : boolean --+ False if not currently pathing (nothing to wait), true if successfully paused.
 end
 
 --? Continues the NPC's path in the case it was paused using :Pause() or :Wait(), if already moving or no path is assigned, nothing will happen. 
-function NPC.Continue(self)
+function NPC.Continue(self) : boolean --+ False if no path to continue, otherwise always true. 
 end
 
 --? The appropiate way to destroy an NPC object, will remove any related data to ensure no memory leaks. 
-function NPC.Destroy(self)
+function NPC.Destroy(self) : nil 
 end
 
 --+ Defining the methods and properties of the NPC Handler
