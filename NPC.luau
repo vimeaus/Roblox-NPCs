@@ -9,9 +9,20 @@ local ImplementationFolder = ReplicatedStorage.Pathing
 local APathfinding2d = require(ImplementationFolder.APathfinding2d)
 
 --# Types
-type NPCSettings = {
+export type NPCSettings = {
     PathfindingType:"APathfinding2d"?,
     Size:Vector3,
+}
+
+export type NonPlayerCharacter = {
+    --Properties
+    State : string,
+    Destination : (Vector3|Vector2)?,
+    PathfindingType : string,
+    Size : Vector3,
+
+    --Methods
+    Move : (NonPlayerCharacter,(Vector3|Vector2)?,NPCSettings) -> (boolean)
 }
 
 --# Variables
@@ -48,7 +59,7 @@ function NPCHandler.newNPC(Humanoid:Humanoid,Settings:NPCSettings?):Object
     newNPC.Destination = nil
     newNPC.PathfindingType = Settings["PathfindingType"]
     newNPC.Size = Settings.Size or Vector3.new(1,1,1)
-    return setmetatable(newNPC,NPC)
+    return setmetatable(newNPC,NPC::NonPlayerCharacter)
 end
 
  

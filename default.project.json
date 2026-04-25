@@ -13,7 +13,9 @@
     },
 
     "ServerScriptService": {
-      
+      "Testing": {
+        "$path": "testing.luau"
+      }
     },
 
     "StarterPlayer": {
