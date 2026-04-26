@@ -43,9 +43,8 @@ export type NonPlayerCharacter = {
 }
 
 --# Variables
-local ActiveNPCs : {NonPlayerCharacter} = {}
-local InactiveNPCs : {NonPlayerCharacter} = {}
-local AllNPCs : {NonPlayerCharacter} = {}
+local ActiveNPCs : {NonPlayerCharacter:boolean?} = {} --+ Dicts instead of lists, for membership testing and is iterable (order is irrelevant)
+local InactiveNPCs : {NonPlayerCharacter:boolean?} = {}
 
 local HandlerThread = nil
 --# Local Functions
