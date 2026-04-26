@@ -1,5 +1,15 @@
 --Copyright 2026 vimeaus
 
+--[[
+
+An NPCHandler aimed at abstracting & encapsulating NPC pathing while improving on current Roblox implementations. 
+New pathfinding types and other improvements can be expected in the future. 
+I recommend using the NPC class as a superclass, and adding any other NPC implementations you want (besides movement) into a new class.
+
+
+]]
+
+
 --# Services
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -23,34 +33,43 @@ export type NonPlayerCharacter = {
     Humanoid : Humanoid,
 
     --Methods
-    Move : (NonPlayerCharacter,(Vector3|Vector2)?,NPCSettings) -> boolean,
-    Cancel : (NonPlayerCharacter) -> boolean,
-    Stop : (NonPlayerCharacter) -> boolean,
-    Pause : (NonPlayerCharacter) -> boolean,
-    Wait : (NonPlayerCharacter) -> boolean,
-    Continue : (NonPlayerCharacter) -> boolean,
-    Destroy : (NonPlayerCharacter) -> nil,
+    Move : (self:NonPlayerCharacter,Destination:(Vector3|Vector2),NPCSetting:NPCSettings) -> boolean,
+    Cancel : (self:NonPlayerCharacter) -> boolean,
+    Stop : (self:NonPlayerCharacter) -> boolean,
+    Pause : (self:NonPlayerCharacter) -> boolean,
+    Wait : (self:NonPlayerCharacter) -> boolean,
+    Continue : (self:NonPlayerCharacter) -> boolean,
+    Destroy : (self:NonPlayerCharacter) -> nil,
 }
 
 --# Variables
-local ActiveNPCs = {}
-local AllNPCs = {}
+local ActiveNPCs : {NonPlayerCharacter} = {}
+local InactiveNPCs : {NonPlayerCharacter} = {}
+local AllNPCs : {NonPlayerCharacter} = {}
 
+local HandlerThread = nil
 --# Local Functions
 
+local function handlerLoop()
+
+    while true do
+        task.wait()
+
+        
+
+
+    end
+
+end
 
 --# Classes
 
 --+ Defining the methods and properties of a NPC
 local NPC = {}
 
---? Moves the NPC to the given destination utilizing the NPC's pathing type. -The moving is Asynchronous.
+--? Moves the NPC to the given destination utilizing the NPC's pathing type. | The moving & path calculation is Asynchronous.
 function NPC.Move(self,Destination:Vector3|Vector2)
-    if not Destination then
-       return
-    end
-
-
+    assert(Destination,"Cannot move NPC when no destination is provided!")
 
 end
 
@@ -74,16 +93,21 @@ end
 function NPC.Continue(self) : boolean --+ False if no path to continue, otherwise always true. 
 end
 
---? The appropiate way to destroy an NPC object, will remove any related data to ensure no memory leaks. 
-function NPC.Destroy(self) : nil 
+--? The appropiate way to destroy an NPC object.
+function NPC.Destroy(self) : nil
 end
 
 --+ Defining the methods and properties of the NPC Handler
 local NPCHandler = {}
 
+--? Creates a new NonPlayerCharacter object from the provided humanoid and settings.
 function NPCHandler.newNPC(Humanoid:Humanoid,Settings:NPCSettings?):Object
     if not Settings then
         Settings = {}
+    end
+    if not HandlerThread then
+        HandlerThread = coroutine.create(handlerLoop)
+        coroutine.resume(HandlerThread)
     end
 
     local newNPC = {}
