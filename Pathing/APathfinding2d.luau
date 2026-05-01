@@ -9,9 +9,14 @@
 
 --# Types
 
+export type Config = {
+
+}
+
 type node = {
     Position:Vector3,
     Cost:number,
+    TravelCost:number,
     PreviousNode:node?
 }
 
@@ -85,7 +90,7 @@ function nodeHeapClass.Pop(self) : node
         table.remove(self._raw,1)
         return self._raw[1]
     end
-    
+
     local popped = self._raw[1]
     local last = table.remove(self._raw,#self._raw)
     self._raw[1] = last
@@ -105,28 +110,92 @@ end
 
 --# Node
 
-local function createNode(Position,Cost,PreviousNode)
+local function createNode(Position, Cost, TravelCost, PreviousNode)
     local Node = {}
     Node.Position = Position
     Node.Cost = Cost
+    Node.TravelCost = TravelCost
     Node.PreviousNode = PreviousNode
     return Node
+end
+
+--# Local Functions
+
+local function getAdjacentPositions(Position:Vector2,Precision:number,Diagonals:boolean) : {Vector2}
+
+    local adjacent = {
+        Position + Vector2.new(0,1),
+        Position + Vector2.new(0,-1),
+        Position + Vector2.new(1,0),
+        Position + Vector2.new(-1,0)
+    }
+
+    if Diagonals then
+        for i = -1,1,2 do
+            for j = -1,1,2 do
+                table.insert(adjacent,Position+Vector2.new(i,j))
+            end
+        end
+    end
+end
+
+local function inverseList(list:{}) : nil
+    local size = #list
+    local clone = table.clone(list)
+    for i = 1,size,1 do
+        list[i] = clone[size - i + 1]
+    end
+end
+
+local function tracePath(node:node) : {node}
+    local inversedPath = {}
+    
+    local current:node = node
+    while current.PreviousNode do
+        table.insert(inversedPath,current)
+        current = node.PreviousNode
+    end
+
+    inverseList(inversedPath)
 end
 
 --# Pathing
 
 local Pathing = {}
 
-function Pathing.ComputePath(StartPosition:Vector3|Vector2,EndPosition:Vector3|Vector2,Config)
+function Pathing.ComputePath(StartPosition:Vector3|Vector2,EndPosition:Vector3|Vector2,Config:{}?)
+    Config = Config or {} :: Config
+
+    if typeof(StartPosition) == "Vector3" then
+        StartPosition = Vector2.new(StartPosition.X,StartPosition.Z)
+    end
+    if typeof(EndPosition) == "Vector3" then
+        EndPosition = Vector2.new(EndPosition.X,EndPosition.Z)
+    end
 
     local MinHeap:heap = createHeap()
-    local FirstNode:node = createNode(StartPosition, 0, nil)
+    local FirstNode:node = createNode(StartPosition, 0, 0, nil)
     
-    MinHeap:Insert(FirstNode)
-
+    local current:node = FirstNode
     while true do
-        
+        current= MinHeap:Pop()
+
+        if current.Position == EndPosition then
+            break
+        end
+
+        local adjacent = getAdjacentPositions(current.Position, Config.Precision or 1, Config.Diagonals or false)
+        for _,position in adjacent do
+            local travelCost = (position - current.Position).Magnitude + current.TravelCost
+            local cost = travelCost + (position - EndPosition).Magnitude
+            local newNode = createNode(position, cost, travelCost, current)
+            MinHeap:Insert(newNode)
+        end
     end
+
+    local path = tracePath(current)
+
+    return path
 end
 
 return Pathing
