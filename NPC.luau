@@ -65,6 +65,7 @@ end
 
 --+ Defining the methods and properties of a NPC
 local NPC = {}
+NPC.__index = NPC
 
 --? Moves the NPC to the given destination utilizing the NPC's pathing type. | The moving & path calculation is Asynchronous.
 function NPC.Move(self,Destination:Vector3|Vector2)

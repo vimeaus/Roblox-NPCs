@@ -13,8 +13,9 @@
     },
 
     "ServerScriptService": {
-      "$className": "ServerScriptService",
-      "$path": "Server"
+      "Testing": {
+        "$path": "testing.server.luau"}
+        
     },
 
     "StarterPlayer": {
