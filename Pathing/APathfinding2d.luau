@@ -10,29 +10,98 @@
 --# Types
 
 type node = {
-
+    Position:Vector3,
+    Cost:number,
+    PreviousNode:node?
 }
 
-type heap = {
+type heap = { 
+    _raw:{node}?,
 
+    Pop : (heap) -> node,
+    Insert : (heap, node) -> nil,
 }
 
---# Heap
+--# min Heap | very simple implementation for A*
 
 local nodeHeapClass = {}
 nodeHeapClass.__index = nodeHeapClass
 
-local function createHeap() 
-    return setmetatable({},heapClass)
+local function SiftUp(heapArray:{node})
+    local currentIndex = #heapArray
+
+    while true do
+        local current = heapArray[currentIndex]
+        
+        local parentIndex = math.floor(currentIndex/2)
+        if heapArray[currentIndex].Cost > heapArray[parentIndex].Cost then
+            break
+        end
+        heapArray[currentIndex],heapArray[parentIndex] = heapArray[parentIndex],heapArray[currentIndex]
+        
+        if parentIndex == 1 then
+            break
+        end
+
+        currentIndex = parentIndex
+    end
 end
+
+local function SiftDown(heapArray:{node})
+    local size = #heapArray
+    local currentIndex = 1
+
+    while true do
+        local current = heapArray[currentIndex]
+
+        local nextIndex = currentIndex
+        local leftIndex = currentIndex * 2 
+        local rightIndex  = currentIndex * 2 + 1
+
+        if leftIndex <= size and heapArray[leftIndex].Cost < heapArray[nextIndex].Cost then
+            nextIndex = leftIndex
+        end
+
+        if rightIndex <= size and heapArray[rightIndex].Cost < heapArray[nextIndex].Cost then
+            nextIndex = rightIndex
+        end
+
+        if currentIndex == nextIndex then 
+            break
+        end
+
+        heapArray[currentIndex],heapArray[nextIndex] = heapArray[nextIndex],heapArray[currentIndex]
+        currentIndex = nextIndex
+    end
+end
+
+function nodeHeapClass.Pop(self) : node
+    local popped = self._raw[1]
+    local last = table.remove(self._raw,#self._raw)
+    self._raw[1] = last
+    SiftDown(self._raw)
+end
+
+function nodeHeapClass.Insert(self,Node:node) : nil
+    table.insert(self._raw,Node)
+    SiftUp(self._raw)
+end
+
+local function createHeap() 
+    local Heap = {}
+    Heap._raw = {}
+    return setmetatable(Heap,nodeHeapClass)
+end
+
 
 --# Node
 
-local nodeClass = {}
-nodeClass.__index = {}
-
-local function createNode()
-    return setmetatable({},nodeClass)
+local function createNode(Position,Cost,PreviousNode)
+    local Node = {}
+    Node.Position = Position
+    Node.Cost = Cost
+    Node.PreviousNode = PreviousNode
+    return Node
 end
 
 --# Pathing
@@ -40,6 +109,9 @@ end
 local Pathing = {}
 
 function Pathing.ComputePath(StartPosition:Vector3|Vector2,EndPosition:Vector3|Vector2,Config)
+
+    local MinHeap:heap = createHeap()
+    
 
 end
 
