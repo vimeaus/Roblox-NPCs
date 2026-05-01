@@ -22,7 +22,7 @@ type heap = {
     Insert : (heap, node) -> nil,
 }
 
---# min Heap | very simple implementation for A*
+--# Min heap | very simple implementation for A
 
 local nodeHeapClass = {}
 nodeHeapClass.__index = nodeHeapClass
@@ -37,7 +37,7 @@ local function SiftUp(heapArray:{node})
         if heapArray[currentIndex].Cost > heapArray[parentIndex].Cost then
             break
         end
-        
+
         heapArray[currentIndex],heapArray[parentIndex] = heapArray[parentIndex],heapArray[currentIndex]
         
         if parentIndex == 1 then
@@ -77,6 +77,15 @@ local function SiftDown(heapArray:{node})
 end
 
 function nodeHeapClass.Pop(self) : node
+    if #self._raw <= 0 then
+        return nil
+    end
+
+    if #self._raw == 1 then
+        table.remove(self._raw,1)
+        return self._raw[1]
+    end
+    
     local popped = self._raw[1]
     local last = table.remove(self._raw,#self._raw)
     self._raw[1] = last
@@ -93,7 +102,6 @@ local function createHeap()
     Heap._raw = {}
     return setmetatable(Heap,nodeHeapClass)
 end
-
 
 --# Node
 
@@ -112,11 +120,14 @@ local Pathing = {}
 function Pathing.ComputePath(StartPosition:Vector3|Vector2,EndPosition:Vector3|Vector2,Config)
 
     local MinHeap:heap = createHeap()
+    local FirstNode:node = createNode(StartPosition, 0, nil)
     
+    MinHeap:Insert(FirstNode)
 
+    while true do
+        
+    end
 end
-
-
 
 return Pathing
 

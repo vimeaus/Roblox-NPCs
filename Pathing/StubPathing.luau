@@ -13,6 +13,4 @@ function Pathing.ComputePath(StartingPoint,Destination,Config)
 
 end
 
-
-
 return Pathing

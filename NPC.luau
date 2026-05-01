@@ -12,6 +12,7 @@ I recommend using the NPC class as a superclass, and adding any other NPC implem
 
 --# Services
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 
 
 --# Modules
@@ -53,17 +54,14 @@ local ActiveNPCs : {NonPlayerCharacter:boolean?} = {} --+ Dicts instead of lists
 local InactiveNPCs : {NonPlayerCharacter:boolean?} = {}
 
 local HandlerThread = nil
+
 --# Local Functions
 
 local function handlerLoop()
 
-    while true do
-        task.wait()
-
+    RunService.Heartbeat:Connect(function(deltaTime)
         
-
-
-    end
+    end)
 
 end
 
@@ -111,6 +109,7 @@ function NPCHandler.newNPC(Humanoid:Humanoid,Settings:NPCSettings?):Object
     if not Settings then
         Settings = {}
     end
+    
     if not HandlerThread then
         HandlerThread = coroutine.create(handlerLoop)
         coroutine.resume(HandlerThread)
