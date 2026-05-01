@@ -42,6 +42,12 @@ export type NonPlayerCharacter = {
     Destroy : (self:NonPlayerCharacter) -> nil,
 }
 
+export type Config = {
+    Precision : number?,
+    Epsilon : number?,
+    Pruning : boolean?,
+}
+
 --# Variables
 local ActiveNPCs : {NonPlayerCharacter:boolean?} = {} --+ Dicts instead of lists, for membership testing and is iterable (order is irrelevant)
 local InactiveNPCs : {NonPlayerCharacter:boolean?} = {}

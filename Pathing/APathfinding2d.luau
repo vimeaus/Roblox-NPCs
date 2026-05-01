@@ -37,6 +37,7 @@ local function SiftUp(heapArray:{node})
         if heapArray[currentIndex].Cost > heapArray[parentIndex].Cost then
             break
         end
+        
         heapArray[currentIndex],heapArray[parentIndex] = heapArray[parentIndex],heapArray[currentIndex]
         
         if parentIndex == 1 then
