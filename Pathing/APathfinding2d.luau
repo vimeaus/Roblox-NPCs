@@ -9,7 +9,13 @@
 
 --# Types
 
-export type Config = {}
+export type Config = {
+	Epsilon:number,
+	Precision:number,
+	Size:Vector3,
+	Diagonals:boolean,
+
+}
 
 type node = {
 	Position: Vector3,
@@ -154,11 +160,12 @@ local function checkForValidAdjacentPosition(PreviousPosition: Vector3, Position
 end
 
 --? Retrieves all adjacent position based on the precision of the algorithm (distance of nodes), and if diagonals are accepted.
-local function getAdjacentPositions(Position: Vector3, Precision: number, Config: Config): { Vector2 }
+local function getAdjacentPositions(Position: Vector3, Config: Config): { Vector2 }
 	local adjacent = {}
+	Config.Precision = Config.Precision or 1
 
-	for i = -Precision, Precision do
-		for j = -Precision, Precision do
+	for i = -Config.Precision, Config.Precision, Config.Precision do
+		for j = -Config.Precision, Config.Precision,  Config.PreviousNode do
 			if math.abs(i) == math.abs(j) then
 				if i == 0 or not Config.Diagonals then
 					continue
@@ -213,7 +220,7 @@ function Pathing.ComputePath(StartPosition: Vector3, EndPosition: Vector3, Confi
 			break
 		end
 
-		local adjacent = getAdjacentPositions(current.Position, Config.Precision or 1, Config.Diagonals or false)
+		local adjacent = getAdjacentPositions(current.Position, Config)
 
 		for _, Position in adjacent do
 			local travelCost = (Position - current.Position).Magnitude + current.TravelCost
