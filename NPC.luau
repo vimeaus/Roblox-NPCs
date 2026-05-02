@@ -9,17 +9,19 @@ I recommend using the NPC class as a superclass, and adding any other NPC implem
 
 ]]
 
-
 --# Services
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 
 --# Modules
+
 local ImplementationFolder = ReplicatedStorage.Pathing
 local APathfinding2d = require(ImplementationFolder.APathfinding2d)
 
 --# Types
+
 export type NPCSettings = {
     PathfindingType:"APathfinding2d"?,
     Size:Vector3,
@@ -45,6 +47,7 @@ export type NonPlayerCharacter = {
 export type Config = ({} | APathfinding2d.Config)?
 
 --# Variables
+
 local ActiveNPCs : {NonPlayerCharacter:boolean?} = {} --+ Dicts instead of lists, for membership testing and is iterable (order is irrelevant)
 local InactiveNPCs : {NonPlayerCharacter:boolean?} = {}
 
@@ -62,14 +65,14 @@ end
 
 --# Classes
 
---+ Defining the methods and properties of a NPC
+--+ NPC Class
 local NPC = {}
 NPC.__index = NPC
 
 --? Moves the NPC to the given destination utilizing the NPC's pathing type. | The moving & path calculation is Asynchronous.
 function NPC.Move(self,Destination:Vector3)
     assert(Destination,"Cannot move NPC when no destination is provided!")
-
+    
 end
 
 --? Cancels the respective NPC's pathing, causing it to finish its current movement, but stopping on the next path 'node'. 
@@ -96,7 +99,7 @@ end
 function NPC.Destroy(self) : nil
 end
 
---+ Defining the methods and properties of the NPC Handler
+--+ NPC Handler
 local NPCHandler = {}
 
 --? Creates a new NonPlayerCharacter object from the provided humanoid and settings.
