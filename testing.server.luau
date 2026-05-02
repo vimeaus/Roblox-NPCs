@@ -13,4 +13,4 @@ local Settings:NPC.NPCSettings = {
 
 NPC.newNPC(Chosen.Humanoid,Settings)
 
-NPC.Move()
+NPC.Move(Vector3.new(15,15,15))

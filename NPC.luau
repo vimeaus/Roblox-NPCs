@@ -27,10 +27,9 @@ export type NPCSettings = {
 
 export type NonPlayerCharacter = {
     --Properties
-    State : string,
+    State : number,
     Destination : (Vector3|Vector2)?,
-    PathfindingType : string,
-    Size : Vector3,
+    Config : Config,
     Humanoid : Humanoid,
 
     --Methods
@@ -43,11 +42,7 @@ export type NonPlayerCharacter = {
     Destroy : (self:NonPlayerCharacter) -> nil,
 }
 
-export type Config = {
-    Precision : number?,
-    Epsilon : number?,
-    Pruning : boolean?,
-}
+export type Config = ({} | APathfinding2d.Config)?
 
 --# Variables
 local ActiveNPCs : {NonPlayerCharacter:boolean?} = {} --+ Dicts instead of lists, for membership testing and is iterable (order is irrelevant)
@@ -105,9 +100,9 @@ end
 local NPCHandler = {}
 
 --? Creates a new NonPlayerCharacter object from the provided humanoid and settings.
-function NPCHandler.newNPC(Humanoid:Humanoid,Settings:NPCSettings?):Object
-    if not Settings then
-        Settings = {}
+function NPCHandler.newNPC(Humanoid:Humanoid,Config:NPCSettings?):Object
+    if not Config then
+        Config = {}
     end
     
     if not HandlerThread then
@@ -116,11 +111,10 @@ function NPCHandler.newNPC(Humanoid:Humanoid,Settings:NPCSettings?):Object
     end
 
     local newNPC = {}
-    newNPC.State = "Idle"
+    newNPC.State = 0
     newNPC.Humanoid = Humanoid
     newNPC.Destination = nil
-    newNPC.PathfindingType = Settings["PathfindingType"]
-    newNPC.Size = Settings.Size or Vector3.new(1,1,1)
+    newNPC.Config = Config
     return setmetatable(newNPC,NPC::NonPlayerCharacter)
 end
 
