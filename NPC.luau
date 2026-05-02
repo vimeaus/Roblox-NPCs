@@ -28,12 +28,12 @@ export type NPCSettings = {
 export type NonPlayerCharacter = {
     --Properties
     State : number,
-    Destination : (Vector3|Vector2)?,
+    Destination : Vector3?,
     Config : Config,
     Humanoid : Humanoid,
 
     --Methods
-    Move : (self:NonPlayerCharacter,Destination:(Vector3|Vector2),NPCSetting:NPCSettings) -> boolean,
+    Move : (self:NonPlayerCharacter,Destination:Vector3,NPCSetting:NPCSettings) -> boolean,
     Cancel : (self:NonPlayerCharacter) -> boolean,
     Stop : (self:NonPlayerCharacter) -> boolean,
     Pause : (self:NonPlayerCharacter) -> boolean,
@@ -67,7 +67,7 @@ local NPC = {}
 NPC.__index = NPC
 
 --? Moves the NPC to the given destination utilizing the NPC's pathing type. | The moving & path calculation is Asynchronous.
-function NPC.Move(self,Destination:Vector3|Vector2)
+function NPC.Move(self,Destination:Vector3)
     assert(Destination,"Cannot move NPC when no destination is provided!")
 
 end
